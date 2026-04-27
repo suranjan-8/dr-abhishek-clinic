@@ -122,22 +122,54 @@ if(st){
 /* ── Services expand ── */
 var srvBtn = document.getElementById('srvBtn');
 var hiddenSrvs = document.querySelectorAll('.hidden-srv');
-if(srvBtn){
-  srvBtn.addEventListener('click', function(){
-    hiddenSrvs.forEach(function(c, i){
-      setTimeout(function(){
-        c.style.display = 'block';
+
+let isExpanded = false;
+
+if (srvBtn) {
+  srvBtn.addEventListener('click', function () {
+
+    if (!isExpanded) {
+      // 👉 SHOW
+      hiddenSrvs.forEach(function (c, i) {
+        setTimeout(function () {
+          c.style.display = 'block';
+          c.style.opacity = '0';
+          c.style.transform = 'translateY(22px)';
+          void c.offsetHeight;
+
+          c.style.transition = 'opacity .45s ease, transform .45s ease';
+          c.style.opacity = '1';
+          c.style.transform = 'translateY(0)';
+        }, i * 120);
+      });
+
+      srvBtn.innerHTML = 'View Less';
+      isExpanded = true;
+
+    } else {
+      // 👉 HIDE
+      hiddenSrvs.forEach(function (c, i) {
         c.style.opacity = '0';
         c.style.transform = 'translateY(22px)';
-        void c.offsetHeight;
-        c.style.transition = 'opacity .45s ease, transform .45s ease';
-        c.style.opacity = '1';
-        c.style.transform = 'translateY(0)';
-      }, i * 120);
-    });
-    srvBtn.style.display = 'none';
+
+        setTimeout(() => {
+          c.style.display = 'none';
+        }, 300);
+      });
+
+      srvBtn.innerHTML = 'View All Treatments';
+      isExpanded = false;
+
+      // 👉 SCROLL BACK UP (important UX fix)
+      window.scrollTo({
+        top: document.getElementById('services').offsetTop - 45,
+        behavior: 'smooth'
+      });
+    }
+
   });
 }
+
 
 /* ── FAQ accordion ── */
 document.querySelectorAll('.faq-item').forEach(function(item){
